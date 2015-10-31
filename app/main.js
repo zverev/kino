@@ -5,6 +5,7 @@ requirejs.config({
         'leaflet': 'lib/leaflet/dist/leaflet-src',
         'underscore': 'lib/underscore/underscore',
         'backbone': 'lib/backbone/backbone',
+        'marionette': 'lib/marionette/lib/backbone.marionette',
         'jquery': 'lib/jquery/dist/jquery',
         'quadTree': 'lib/leaflet.maskcanvas/src/QuadTree',
         'componentsManager': 'lib/ComponentsManager',

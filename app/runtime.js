@@ -1,17 +1,21 @@
 define([
     'componentsManager',
     'leaflet',
+    'marionette',
     'LayoutManager',
     'models/CinemasCollection',
     'layers/CinemasLayer',
-    'lib/iconSidebarWidget/iconSidebarWidget'
+    'lib/iconSidebarWidget/iconSidebarWidget',
+    'views/CinemasListView'
 ], function(
     ComponentsManager,
     L,
+    Marionette,
     LayoutManager,
     CinemasCollection,
     CinemasLayer,
-    IconSidebarWidget
+    IconSidebarWidget,
+    CinemasListView
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -45,7 +49,7 @@ define([
     });
 
     cm.define('cinemasCollection', [], function(cm) {
-        return new CinemasCollection({
+        return new CinemasCollection([], {
             url: 'app/models/cinemas.json'
         });
     });
@@ -74,13 +78,24 @@ define([
     cm.define('moviesTab', ['sidebarWidget'], function(cm) {
         var sidebarWidget = cm.get('sidebarWidget');
         var container = sidebarWidget.addTab('moviesTab', 'icon-video');
+        console.log(CinemasListView);
         return null;
     });
 
-    cm.define('cinemasTab', ['sidebarWidget'], function(cm) {
+    cm.define('cinemasTab', ['sidebarWidget', 'cinemasCollection'], function(cm) {
         var sidebarWidget = cm.get('sidebarWidget');
-        var container = sidebarWidget.addTab('cinemasTab', 'icon-videocam');
-        return null;
+        var cinemasCollection = cm.get('cinemasCollection');
+        var reg = new Marionette.Region({
+            el: sidebarWidget.addTab('cinemasTab', 'icon-videocam')
+        })
+        var cinemasListView = new CinemasListView({
+            model: new Backbone.Model({
+                searchStr: ''
+            }),
+            collection: cinemasCollection
+        });
+        reg.show(cinemasListView);
+        return cinemasListView;
     });
 
     cm.create();
