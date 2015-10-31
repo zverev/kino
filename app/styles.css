@@ -1,2 +1,12 @@
 html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
 .mapContainer { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+.leaflet-popup-content-wrapper { border-radius: 4px; }
+
+.btn { border: 1px solid hsla(0, 0%, 0%, 0.25); border-radius: 4px; padding: 4px 8px; display: inline-block; cursor: pointer; }
+.btn:hover { background: hsla(0, 0%, 0%, 0.05); }
+
+.cinemaPopup { min-width: 200px; }
+.cinemaPopup-row { padding: 5px 0; }
+.cinemaPopup-title { border-bottom: 3px solid hsl(0, 0%, 80%); font-size: 1.3em; font-weight: bold; }
+.cinemaPopup-footer { display: table; width: 100%; }
+.cinemaPopup-details, .cinemaPopup-sessions { display: table-cell; width: 50%; text-align: center; }
