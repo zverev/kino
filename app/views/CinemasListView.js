@@ -35,6 +35,9 @@ define(['marionette', 'views/CinemaItemView', 'views/SearchView'], function(Mari
             this.collectionView = new CollectionView({
                 collection: this.collection
             });
+            this.collectionView.on('all', function() {
+                this.trigger.apply(this, arguments)
+            }.bind(this));
             this.getRegion('search').show(this.searchView);
             this.getRegion('collection').show(this.collectionView);
         }

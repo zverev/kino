@@ -94,6 +94,9 @@ define([
             }),
             collection: cinemasCollection
         });
+        cinemasListView.on('childview:clack', function(child, model) {
+            console.log(model);
+        });
         reg.show(cinemasListView);
         return cinemasListView;
     });
