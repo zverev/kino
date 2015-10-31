@@ -1,13 +1,17 @@
 define([
     'componentsManager',
     'leaflet',
-    'LayoutManager'
+    'LayoutManager',
+    'models/CinemasCollection',
+    'layers/CinemasLayer'
 ], function(
     ComponentsManager,
     L,
-    LayoutManager
+    LayoutManager,
+    CinemasCollection,
+    CinemasLayer
 ) {
-    var cm = new ComponentsManager();
+    var cm = window.cm = new ComponentsManager();
 
     cm.define('layoutManager', [], function() {
         return new LayoutManager({
@@ -17,7 +21,7 @@ define([
 
     cm.define('map', ['layoutManager'], function(cm) {
         var layoutManager = cm.get('layoutManager');
-        
+
         var map = L.map(layoutManager.getMapContainer()).setView({
             lat: 55.7529120574368,
             lng: 37.622079849243164
@@ -34,6 +38,26 @@ define([
         tl.addTo(map);
 
         return map;
+    });
+
+    cm.define('cinemasCollection', [], function(cm) {
+        return new CinemasCollection({
+            url: 'app/models/cinemas.json'
+        });
+    });
+
+    cm.define('cinemasLayer', ['cinemasCollection'], function(cm) {
+        var cinemasCollection = cm.get('cinemasCollection');
+        return new CinemasLayer({
+            collection: cinemasCollection
+        });
+    });
+
+    cm.define('layersManager', ['map', 'cinemasLayer'], function(cm) {
+        var map = cm.get('map');
+        var cinemasLayer = cm.get('cinemasLayer');
+        map.addLayer(cinemasLayer);
+        return null;
     });
 
     cm.create();
