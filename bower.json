@@ -1,0 +1,11 @@
+{
+  "name": "transport.noctural",
+  "dependencies": {
+    "leaflet": "~0.7.5",
+    "leaflet.maskcanvas": "*",
+    "requirejs": "~2.1.20",
+    "backbone": "~1.2.3",
+    "jquery": "~2.1.4",
+    "requirejs-plugins": "~1.0.3"
+  }
+}

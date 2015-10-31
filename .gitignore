@@ -1,0 +1,4 @@
+app/lib/*
+!app/lib/.gitkeep
+app/localConfig.json
+*.sublime-*
