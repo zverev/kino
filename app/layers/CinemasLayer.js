@@ -20,6 +20,12 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
                 this.popup.render(model)
             }.bind(this));
             this.addLayer(marker);
+        },
+        navigateCinema: function(cinemaModel) {
+            this._map.setView([
+                cinemaModel.get('location').latitude,
+                cinemaModel.get('location').longitude
+            ], 15);
         }
     });
 });

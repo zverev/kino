@@ -82,7 +82,8 @@ define([
         return null;
     });
 
-    cm.define('cinemasTab', ['sidebarWidget', 'cinemasCollection'], function(cm) {
+    cm.define('cinemasTab', ['sidebarWidget', 'cinemasCollection', 'cinemasLayer'], function(cm) {
+        var cinemasLayer = cm.get('cinemasLayer')
         var sidebarWidget = cm.get('sidebarWidget');
         var cinemasCollection = cm.get('cinemasCollection');
         var reg = new Marionette.Region({
@@ -95,7 +96,7 @@ define([
             collection: cinemasCollection
         });
         cinemasListView.on('childview:clack', function(child, model) {
-            console.log(model);
+            cinemasLayer.navigateCinema(model);
         });
         reg.show(cinemasListView);
         return cinemasListView;
