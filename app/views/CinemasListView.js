@@ -26,7 +26,9 @@ define(['marionette', 'views/CinemaItemView', 'views/SearchView'], function(Mari
         },
         render: function() {
             Marionette.LayoutView.prototype.render.apply(this);
-            this.searchView = new SearchView();
+            this.searchView = new SearchView({
+                placeholder: 'Поиск по кинотеатрам'
+            });
             this.searchView.on('enter', function(val) {
                 this.collectionView.setFilter(val)
             }.bind(this));
