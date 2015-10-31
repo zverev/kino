@@ -7,6 +7,7 @@ requirejs.config({
         'backbone': 'lib/backbone/backbone',
         'jquery': 'lib/jquery/dist/jquery',
         'quadTree': 'lib/leaflet.maskcanvas/src/QuadTree',
+        'componentsManager': 'lib/ComponentsManager',
         'maskcanvas': 'lib/leaflet.maskcanvas/src/L.TileLayer.MaskCanvas'
     },
     shim: {
@@ -27,6 +28,4 @@ requirejs.config({
     }
 });
 
-define(['map'], function() {
-    
-});
+require(['runtime']);
