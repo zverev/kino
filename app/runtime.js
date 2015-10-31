@@ -3,13 +3,15 @@ define([
     'leaflet',
     'LayoutManager',
     'models/CinemasCollection',
-    'layers/CinemasLayer'
+    'layers/CinemasLayer',
+    'lib/iconSidebarWidget/iconSidebarWidget'
 ], function(
     ComponentsManager,
     L,
     LayoutManager,
     CinemasCollection,
-    CinemasLayer
+    CinemasLayer,
+    IconSidebarWidget
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -59,6 +61,25 @@ define([
         var map = cm.get('map');
         var cinemasLayer = cm.get('cinemasLayer');
         map.addLayer(cinemasLayer);
+        return null;
+    });
+
+    cm.define('sidebarWidget', ['layoutManager'], function(cm) {
+        var layoutManager = cm.get('layoutManager');
+        var sidebarWidget = new IconSidebarWidget();
+        sidebarWidget.appendTo(layoutManager.getWidgetsContainer());
+        return sidebarWidget;
+    });
+
+    cm.define('moviesTab', ['sidebarWidget'], function(cm) {
+        var sidebarWidget = cm.get('sidebarWidget');
+        var container = sidebarWidget.addTab('moviesTab', 'icon-video');
+        return null;
+    });
+
+    cm.define('cinemasTab', ['sidebarWidget'], function(cm) {
+        var sidebarWidget = cm.get('sidebarWidget');
+        var container = sidebarWidget.addTab('cinemasTab', 'icon-videocam');
         return null;
     });
 

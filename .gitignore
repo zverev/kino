@@ -1,6 +1,7 @@
 app/lib/*
 !app/lib/.gitkeep
 !app/lib/ComponentsManager.js
+!app/lib/iconSidebarWidget
 app/localConfig.json
 *.sublime-*
 service

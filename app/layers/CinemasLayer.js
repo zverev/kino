@@ -8,8 +8,10 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
         },
         addMarker: function(model) {
             var marker = new PopupMarker([model.get('location').latitude, model.get('location').longitude]);
-            //marker.bindPopup(this.popup.el);
-            L.Marker.prototype.bindPopup.call(marker, this.popup.el);
+            //L.Marker.prototype.bindPopup.call(marker, this.popup.el);
+            marker.bindPopup(this.popup.el, {
+                showOnMouseOver: true
+            });
             marker.on('click', function() {
                 console.log('test');
                 marker.openPopup();
