@@ -37,10 +37,10 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
         },
         addMarker: function(model) {
             var marker = new PopupMarker([model.get('location').latitude, model.get('location').longitude]);
-            L.Marker.prototype.bindPopup.call(marker, this.popup.el);
-            // marker.bindPopup(this.popup.el, {
-            //     showOnMouseOver: true
-            // });
+            //L.Marker.prototype.bindPopup.call(marker, this.popup.el);
+            marker.bindPopup(this.popup.el, {
+                showOnMouseOver: true
+            });
             marker.on('popupopen', function() {
                 this.popup.render(model, this.filterSeances(model.get('id'), this.seances));
             }.bind(this));
