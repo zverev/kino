@@ -8,7 +8,8 @@ define([
     'layers/CinemasLayer',
     'lib/iconSidebarWidget/iconSidebarWidget',
     'views/CinemasListView',
-    'views/DialogView'
+    'views/DialogView',
+    'views/CinemaDetailsView'
 ], function(
     ComponentsManager,
     L,
@@ -19,7 +20,8 @@ define([
     CinemasLayer,
     IconSidebarWidget,
     CinemasListView,
-    DialogView
+    DialogView,
+    CinemaDetailsView
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -51,10 +53,6 @@ define([
 
         return map;
     });
-
-    cm.define('foo', [], function(cm) {
-        return 'foo';
-    })
 
     cm.define('dialogsRegion', ['layoutManager'], function(cm) {
         var layoutManager = cm.get('layoutManager');
@@ -94,7 +92,9 @@ define([
 
         cinemasLayer.on('details', function(le) {
             dialogsRegion.show(new DialogView({
-                contentView: new Marionette.View()
+                contentView: new CinemaDetailsView({
+                    model: le.model
+                })
             }));
         });
 

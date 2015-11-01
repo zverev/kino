@@ -42,3 +42,9 @@ div[data-pane-id="cinemasTab"] { overflow-y: scroll; }
 
 .dialogView { min-width: 600px; min-height: 400px; background-color: white; box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.5); position: relative; }
 .dialogView-closeButton { cursor: pointer; position: absolute; top: 10px; right: 10px; }
+
+.cinemaDetailsView { padding: 5px 20px; }
+.cinemaDetailsView * { margin-bottom: 5px; margin-top: 5px; }
+.cinemaDetailsView-title { font-size: 1.6em; }
+.cinemaDetailsView-address { font-size: 0.9em; }
+.cinemaDetailsView-photo { max-width: 600px; }
