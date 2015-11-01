@@ -3,7 +3,7 @@ define([
     'leaflet',
     'jquery',
     'marionette',
-    'LayoutManager',
+    'layoutManager',
     'models/ItemsCollection',
     'layers/CinemasLayer',
     'lib/iconSidebarWidget/iconSidebarWidget',
