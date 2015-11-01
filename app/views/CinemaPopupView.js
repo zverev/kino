@@ -4,8 +4,10 @@ define(['views/View', 'text!views/cinemaPopupView.html'], function(View, templat
         initialize: function() {
             this.template = _.template(template);
         },
-        render: function(model) {
-            this.$el.html(this.template(model.attributes));
+        render: function(model, seances) {
+            this.$el.html(this.template(_.extend({}, model.attributes, {
+                seances: seances
+            })));
             this.$('.cinemaPopup-details').on('click', function() {
                 this.trigger('details', model);
             }.bind(this)); 

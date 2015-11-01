@@ -168,6 +168,7 @@ define([
                 sidebarWidget.collapse();
                 map.setDefaultView();
                 cinemasLayer.setCollection(getCinemasBySeances(cinemasCollection, seancesCollection));
+                cinemasLayer.setSeances(seancesCollection);
             });
         });
 
