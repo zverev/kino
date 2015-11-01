@@ -77,3 +77,9 @@ div[data-pane-id="cinemasTab"] { overflow-y: scroll; }
 .ticketsDialog { max-width: 800px; padding: 20px; }
 .ticketsDialog-greetingsStr { font-size: 1.4em; padding: 30px; } 
 .ticketsDialog-emojis { width: 200px; margin: 0 auto; }
+.ticketsDialog-idle { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 185px;
+ }
