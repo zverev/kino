@@ -1,21 +1,25 @@
 define([
     'componentsManager',
     'leaflet',
+    'jquery',
     'marionette',
     'LayoutManager',
     'models/CinemasCollection',
     'layers/CinemasLayer',
     'lib/iconSidebarWidget/iconSidebarWidget',
-    'views/CinemasListView'
+    'views/CinemasListView',
+    'views/DialogView'
 ], function(
     ComponentsManager,
     L,
+    $,
     Marionette,
     LayoutManager,
     CinemasCollection,
     CinemasLayer,
     IconSidebarWidget,
-    CinemasListView
+    CinemasListView,
+    DialogView
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -48,17 +52,53 @@ define([
         return map;
     });
 
+    cm.define('foo', [], function(cm) {
+        return 'foo';
+    })
+
+    cm.define('dialogsRegion', ['layoutManager'], function(cm) {
+        var layoutManager = cm.get('layoutManager');
+        var dialogsContainer = layoutManager.getDialogsContainer();
+
+        var reg = new Marionette.Region({
+            el: '.dialogsContainer'
+        });
+
+        reg.on('show', function() {
+            $(dialogsContainer).addClass('active');
+        });
+
+        reg.on('empty', function() {
+            $(dialogsContainer).removeClass('active');
+        });
+
+        $(dialogsContainer).on('click', function() {
+            reg.reset();
+        });
+
+        return reg;
+    });
+
     cm.define('cinemasCollection', [], function(cm) {
         return new CinemasCollection([], {
             url: 'app/models/cinemas.json'
         });
     });
 
-    cm.define('cinemasLayer', ['cinemasCollection'], function(cm) {
+    cm.define('cinemasLayer', ['cinemasCollection', 'dialogsRegion'], function(cm) {
+        var dialogsRegion = cm.get('dialogsRegion');
         var cinemasCollection = cm.get('cinemasCollection');
-        return new CinemasLayer({
+        var cinemasLayer = new CinemasLayer({
             collection: cinemasCollection
         });
+
+        cinemasLayer.on('details', function(le) {
+            dialogsRegion.show(new DialogView({
+                contentView: new Marionette.View()
+            }));
+        });
+
+        return cinemasLayer;
     });
 
     cm.define('layersManager', ['map', 'cinemasLayer'], function(cm) {

@@ -1,5 +1,10 @@
 html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: 'Open Sans'; }
-.mapContainer { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+.fullSizeContainer { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+.widgetsContainer, .dialogsContainer { pointer-events: none; }
+.widgetsContainer.active, .dialogsContainer.active { pointer-events: auto; background-color: hsla(0, 0%, 0%, .4); }
+.widgetsContainer *, .dialogsContainer * { pointer-events: auto; }
+.dialogsContainer { display: flex; align-items: center; justify-content: space-around; z-index: 9999; }
+
 .leaflet-popup-content-wrapper { border-radius: 4px; }
 
 .btn { border: 1px solid hsla(0, 0%, 0%, 0.25); border-radius: 4px; padding: 4px 8px; display: inline-block; cursor: pointer; }
@@ -34,3 +39,7 @@ div[data-pane-id="cinemasTab"] { overflow-y: scroll; }
     width: 100%;
     box-sizing: border-box; 
 }
+
+.dialogView { min-width: 600px; min-height: 400px; background-color: white; box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.5); }
+.dialogView-header { text-align: right; padding: 5px; color: hsl(0, 0%, 25%); }
+.dialogView-closeButton { cursor: pointer; }

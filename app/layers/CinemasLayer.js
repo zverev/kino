@@ -3,8 +3,23 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
         initialize: function(options) {
             L.FeatureGroup.prototype.initialize.apply(this, arguments)
             L.setOptions(this, options);
-            this.options.collection.on('add', this.addMarker.bind(this));
+            
             this.popup = new CinemaPopupView();
+            this.popup.on('details', function(model) {
+                this.fire('details', {
+                    model: model
+                });
+            }.bind(this));
+            this.popup.on('seances', function(model) {
+                this.fire('seances', {
+                    model: model
+                });
+            }.bind(this));
+
+            this.options.collection.forEach(function(it) {
+                this.addMarker(it);
+            }.bind(this));
+            this.options.collection.on('add', this.addMarker.bind(this));
         },
         addMarker: function(model) {
             var marker = new PopupMarker([model.get('location').latitude, model.get('location').longitude]);
@@ -12,12 +27,8 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
             marker.bindPopup(this.popup.el, {
                 showOnMouseOver: true
             });
-            marker.on('click', function() {
-                console.log('test');
-                marker.openPopup();
-            })
             marker.on('popupopen', function() {
-                this.popup.render(model)
+                this.popup.render(model);
             }.bind(this));
             this.addLayer(marker);
         },
