@@ -11,7 +11,8 @@ define([
     'views/DialogView',
     'views/CinemaDetailsView',
     'views/CinemaItemView',
-    'views/MovieItemView'
+    'views/MovieItemView',
+    'views/SelectedMovieWidget'
 ], function(
     ComponentsManager,
     L,
@@ -25,7 +26,8 @@ define([
     DialogView,
     CinemaDetailsView,
     CinemaItemView,
-    MovieItemView
+    MovieItemView,
+    SelectedMovieWidget
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -141,12 +143,26 @@ define([
         return sidebarWidget;
     });
 
-    cm.define('moviesTab', ['map', 'sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer'], function(cm) {
+    cm.define('selectedMovieWidget', ['layoutManager', 'cinemasCollection', 'cinemasLayer'], function(cm) {
+        var layoutManager = cm.get('layoutManager');
+        var cinemasLayer = cm.get('cinemasLayer');
+        var cinemasCollection = cm.get('cinemasCollection');
+        var selectedMovieWidget = new SelectedMovieWidget();
+        selectedMovieWidget.on('reset', function() {
+            cinemasLayer.setCollection(cinemasCollection);
+            cinemasLayer.setSeances(null);
+        });
+        selectedMovieWidget.appendTo(layoutManager.getWidgetsContainer());
+        return selectedMovieWidget;
+    });
+
+    cm.define('moviesTab', ['map', 'sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer', 'selectedMovieWidget'], function(cm) {
         var map = cm.get('map');
         var cinemasLayer = cm.get('cinemasLayer');
         var sidebarWidget = cm.get('sidebarWidget');
         var moviesCollection = cm.get('moviesCollection');
         var cinemasCollection = cm.get('cinemasCollection');
+        var selectedMovieWidget = cm.get('selectedMovieWidget');
 
         var reg = new Marionette.Region({
             el: sidebarWidget.addTab('moviesTab', 'icon-video')
@@ -164,6 +180,7 @@ define([
             var seancesCollection = new ItemsCollection([], {
                 url: 'http://68a2bba2.ngrok.io/get/50_seances'
             });
+            selectedMovieWidget.setMovie(model);
             seancesCollection.on('ready', function() {
                 sidebarWidget.collapse();
                 map.setDefaultView();
