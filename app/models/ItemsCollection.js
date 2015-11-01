@@ -1,7 +1,11 @@
 define(['backbone', 'jquery'], function(Backbone, $) {
     return Backbone.Collection.extend({
         initialize: function(els, options) {
-            $.ajax(options.url).then(function(res) {
+            this.options = options;
+            this.restore();
+        },
+        restore: function() {
+            $.ajax(this.options.url).then(function(res) {
                 res.map(function(m) {
                     this.add(m);
                 }.bind(this));

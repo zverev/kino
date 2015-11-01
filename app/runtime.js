@@ -4,24 +4,26 @@ define([
     'jquery',
     'marionette',
     'LayoutManager',
-    'models/CinemasCollection',
+    'models/ItemsCollection',
     'layers/CinemasLayer',
     'lib/iconSidebarWidget/iconSidebarWidget',
-    'views/CinemasListView',
+    'views/SearchCollectionView',
     'views/DialogView',
-    'views/CinemaDetailsView'
+    'views/CinemaDetailsView',
+    'views/CinemaItemView',
 ], function(
     ComponentsManager,
     L,
     $,
     Marionette,
     LayoutManager,
-    CinemasCollection,
+    ItemsCollection,
     CinemasLayer,
     IconSidebarWidget,
-    CinemasListView,
+    SearchCollectionView,
     DialogView,
-    CinemaDetailsView
+    CinemaDetailsView,
+    CinemaItemView
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -78,8 +80,14 @@ define([
     });
 
     cm.define('cinemasCollection', [], function(cm) {
-        return new CinemasCollection([], {
+        return new ItemsCollection([], {
             url: 'mock/cinemas.json'
+        });
+    });
+
+    cm.define('moviesCollection', [], function(cm) {
+        return new ItemsCollection([], {
+            url: 'http://68a2bba2.ngrok.io/get/50_movies'
         });
     });
 
@@ -118,7 +126,6 @@ define([
     cm.define('moviesTab', ['sidebarWidget'], function(cm) {
         var sidebarWidget = cm.get('sidebarWidget');
         var container = sidebarWidget.addTab('moviesTab', 'icon-video');
-        console.log(CinemasListView);
         return null;
     });
 
@@ -129,11 +136,12 @@ define([
         var reg = new Marionette.Region({
             el: sidebarWidget.addTab('cinemasTab', 'icon-videocam')
         })
-        var cinemasListView = new CinemasListView({
-            model: new Backbone.Model({
-                searchStr: ''
-            }),
-            collection: cinemasCollection
+        var cinemasListView = new SearchCollectionView({
+            itemView: CinemaItemView,
+            collection: cinemasCollection,
+            searchViewOptions: {
+                placeholder: 'Поиск по кинотеатрам'
+            }
         });
         cinemasListView.on('childview:clack', function(child, model) {
             cinemasLayer.navigateCinema(model);
