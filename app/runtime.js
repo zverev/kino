@@ -12,7 +12,8 @@ define([
     'views/CinemaDetailsView',
     'views/CinemaItemView',
     'views/MovieItemView',
-    'views/SelectedMovieWidget'
+    'views/SelectedMovieWidget',
+    'views/PreloaderView'
 ], function(
     ComponentsManager,
     L,
@@ -27,7 +28,8 @@ define([
     CinemaDetailsView,
     CinemaItemView,
     MovieItemView,
-    SelectedMovieWidget
+    SelectedMovieWidget,
+    PreloaderView
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -156,13 +158,14 @@ define([
         return selectedMovieWidget;
     });
 
-    cm.define('moviesTab', ['map', 'sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer', 'selectedMovieWidget'], function(cm) {
+    cm.define('moviesTab', ['map', 'sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer', 'selectedMovieWidget', 'dialogsRegion'], function(cm) {
         var map = cm.get('map');
         var cinemasLayer = cm.get('cinemasLayer');
         var sidebarWidget = cm.get('sidebarWidget');
         var moviesCollection = cm.get('moviesCollection');
         var cinemasCollection = cm.get('cinemasCollection');
         var selectedMovieWidget = cm.get('selectedMovieWidget');
+        var dialogsRegion = cm.get('dialogsRegion');
 
         var reg = new Marionette.Region({
             el: sidebarWidget.addTab('moviesTab', 'icon-video')
@@ -177,12 +180,16 @@ define([
 
         });
         cinemasListView.on('childview:clack', function(child, model) {
+            dialogsRegion.show(new PreloaderView());
+
             var seancesCollection = new ItemsCollection([], {
                 url: 'http://68a2bba2.ngrok.io/get/50_seances'
             });
-            selectedMovieWidget.setMovie(model);
+
             seancesCollection.on('ready', function() {
+                dialogsRegion.reset();
                 sidebarWidget.collapse();
+                selectedMovieWidget.setMovie(model);
                 map.setDefaultView();
                 cinemasLayer.setCollection(getCinemasBySeances(cinemasCollection, seancesCollection));
                 cinemasLayer.setSeances(seancesCollection);

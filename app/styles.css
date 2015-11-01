@@ -68,3 +68,5 @@ div[data-pane-id="cinemasTab"] { overflow-y: scroll; }
 
 .selectedMovieWidget-movieTitle { display: table-cell; text-align: center; width: 100%; }
 .selectedMovieWidget-resetButton { display: table-cell; }
+
+.preloaderView { color: #fff; font-size: 1.4em; }
