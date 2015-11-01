@@ -79,7 +79,7 @@ define([
 
     cm.define('cinemasCollection', [], function(cm) {
         return new CinemasCollection([], {
-            url: 'app/models/cinemas.json'
+            url: 'mock/cinemas.json'
         });
     });
 
