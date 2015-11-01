@@ -150,22 +150,13 @@ define([
         var cinemasLayer = cm.get('cinemasLayer');
         var cinemasCollection = cm.get('cinemasCollection');
         var selectedMovieWidget = new SelectedMovieWidget();
-        selectedMovieWidget.on('reset', function() {
-            cinemasLayer.setCollection(cinemasCollection);
-            cinemasLayer.setSeances(null);
-        });
         selectedMovieWidget.appendTo(layoutManager.getWidgetsContainer());
         return selectedMovieWidget;
     });
 
-    cm.define('moviesTab', ['map', 'sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer', 'selectedMovieWidget', 'dialogsRegion'], function(cm) {
-        var map = cm.get('map');
-        var cinemasLayer = cm.get('cinemasLayer');
+    cm.define('moviesTab', ['sidebarWidget', 'moviesCollection', 'cinemasLayer'], function(cm) {
         var sidebarWidget = cm.get('sidebarWidget');
         var moviesCollection = cm.get('moviesCollection');
-        var cinemasCollection = cm.get('cinemasCollection');
-        var selectedMovieWidget = cm.get('selectedMovieWidget');
-        var dialogsRegion = cm.get('dialogsRegion');
 
         var reg = new Marionette.Region({
             el: sidebarWidget.addTab('moviesTab', 'icon-video')
@@ -177,28 +168,60 @@ define([
             searchViewOptions: {
                 placeholder: 'Поиск по фильмам'
             }
-
-        });
-        cinemasListView.on('childview:clack', function(child, model) {
-            dialogsRegion.show(new PreloaderView());
-
-            var seancesCollection = new ItemsCollection([], {
-                url: 'http://68a2bba2.ngrok.io/get/50_seances'
-            });
-
-            seancesCollection.on('ready', function() {
-                dialogsRegion.reset();
-                sidebarWidget.collapse();
-                selectedMovieWidget.setMovie(model);
-                map.setDefaultView();
-                cinemasLayer.setCollection(getCinemasBySeances(cinemasCollection, seancesCollection));
-                cinemasLayer.setSeances(seancesCollection);
-            });
         });
 
         reg.show(cinemasListView);
 
         return cinemasListView;
+    });
+
+    cm.define('currentMovieController', ['selectedMovieWidget', 'sidebarWidget', 'cinemasLayer', 'cinemasCollection', 'dialogsRegion', 'moviesTab'], function(cm) {
+        var CurrentMovieController = L.Class.extend({
+            initialize: function(options) {
+                L.setOptions(this, options);
+                this.options.selectedMovieWidget.on('reset', function() {
+                    this.reset();
+                }.bind(this));
+                this.options.cinemasListView.on('childview:clack', function(child, model) {
+                    this.options.dialogsRegion.show(new PreloaderView());
+
+                    var seancesCollection = new ItemsCollection([], {
+                        url: 'http://68a2bba2.ngrok.io/get/50_seances'
+                    });
+
+                    seancesCollection.on('ready', function() {
+                        this.options.dialogsRegion.reset();
+                        var currentMovieController = cm.get('currentMovieController');
+                        currentMovieController && currentMovieController.setCurrentMovie(model, seancesCollection);
+                    }.bind(this));
+                }.bind(this));
+                this.options.sidebarWidget.on('opened', function() {
+                    this.reset();
+                }.bind(this));
+            },
+            setCurrentMovie: function(movieModel, seancesCollection) {
+                this.options.sidebarWidget.collapse();
+                this.options.selectedMovieWidget.setMovie(movieModel);
+                this.options.map.setDefaultView();
+                this.options.cinemasLayer.setCollection(getCinemasBySeances(this.options.cinemasCollection, seancesCollection));
+                this.options.cinemasLayer.setSeances(seancesCollection);
+            },
+            reset: function() {
+                this.options.selectedMovieWidget.hide();
+                this.options.cinemasLayer.setCollection(this.options.cinemasCollection);
+                this.options.cinemasLayer.setSeances(null);
+            }
+        });
+
+        return new CurrentMovieController({
+            cinemasLayer: cm.get('cinemasLayer'),
+            cinemasCollection: cm.get('cinemasCollection'),
+            sidebarWidget: cm.get('sidebarWidget'),
+            selectedMovieWidget: cm.get('selectedMovieWidget'),
+            map: cm.get('map'),
+            dialogsRegion: cm.get('dialogsRegion'),
+            cinemasListView: cm.get('moviesTab')
+        });
     });
 
     cm.define('cinemasTab', ['sidebarWidget', 'cinemasCollection', 'cinemasLayer'], function(cm) {
