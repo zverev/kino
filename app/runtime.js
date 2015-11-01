@@ -29,6 +29,16 @@ define([
 ) {
     var cm = window.cm = new ComponentsManager();
 
+    function getCinemasBySeances(totalCinemasCollection, seancesCollection) {
+        return new Backbone.Collection(_.uniq(seancesCollection.map(function(seanceModel) {
+            return seanceModel.get('cinemaId');
+        })).map(function(cinemaId) {
+            return totalCinemasCollection.findWhere({
+                id: cinemaId
+            })
+        }));
+    }
+
     cm.define('layoutManager', [], function() {
         return new LayoutManager({
             el: document.body
@@ -125,7 +135,7 @@ define([
         return sidebarWidget;
     });
 
-    cm.define('moviesTab', ['sidebarWidget', 'moviesCollection', 'cinemasCollection'], function(cm) {
+    cm.define('moviesTab', ['sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer'], function(cm) {
         var cinemasLayer = cm.get('cinemasLayer')
         var sidebarWidget = cm.get('sidebarWidget');
         var moviesCollection = cm.get('moviesCollection');
@@ -144,7 +154,12 @@ define([
 
         });
         cinemasListView.on('childview:clack', function(child, model) {
-            console.log(model);
+            var seancesCollection = new ItemsCollection([], {
+                url: 'http://68a2bba2.ngrok.io/get/50_seances'
+            });
+            seancesCollection.on('ready', function() {
+                cinemasLayer.setCollection(getCinemasBySeances(cinemasCollection, seancesCollection));
+            });
         });
 
         reg.show(cinemasListView);

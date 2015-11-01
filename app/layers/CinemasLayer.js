@@ -16,10 +16,19 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
                 });
             }.bind(this));
 
-            this.options.collection.forEach(function(it) {
+            this.addMarkerBound = this.addMarker.bind(this);
+            this.setCollection(this.options.collection);
+        },
+        setCollection: function(collection) {
+            this.clearLayers();
+            if (this.collection) {
+                this.collection.off('add', this.addMarkerBound);
+            }
+            this.collection = collection;
+            collection.forEach(function(it) {
                 this.addMarker(it);
             }.bind(this));
-            this.options.collection.on('add', this.addMarker.bind(this));
+            collection.on('add', this.addMarkerBound);
         },
         addMarker: function(model) {
             var marker = new PopupMarker([model.get('location').latitude, model.get('location').longitude]);

@@ -9,8 +9,8 @@ define(['backbone', 'jquery'], function(Backbone, $) {
                 res.map(function(m) {
                     this.add(m);
                 }.bind(this));
+                this.trigger('ready');
             }.bind(this));
-            this.trigger('ready');
         }
     });
 });
