@@ -40,6 +40,5 @@ div[data-pane-id="cinemasTab"] { overflow-y: scroll; }
     box-sizing: border-box; 
 }
 
-.dialogView { min-width: 600px; min-height: 400px; background-color: white; box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.5); }
-.dialogView-header { text-align: right; padding: 5px; color: hsl(0, 0%, 25%); }
-.dialogView-closeButton { cursor: pointer; }
+.dialogView { min-width: 600px; min-height: 400px; background-color: white; box-shadow: 0 0 5px hsla(0, 0%, 0%, 0.5); position: relative; }
+.dialogView-closeButton { cursor: pointer; position: absolute; top: 10px; right: 10px; }
