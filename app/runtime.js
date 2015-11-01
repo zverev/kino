@@ -109,7 +109,7 @@ define([
 
     cm.define('moviesCollection', [], function(cm) {
         return new ItemsCollection([], {
-            url: 'http://68a2bba2.ngrok.io/get/50_movies'
+            url: 'mock/movies.json'
         });
     });
 
@@ -186,13 +186,15 @@ define([
                     this.options.dialogsRegion.show(new PreloaderView());
 
                     var seancesCollection = new ItemsCollection([], {
-                        url: 'http://68a2bba2.ngrok.io/get/50_seances'
+                        url: 'mock/seances.json'
                     });
 
                     seancesCollection.on('ready', function() {
-                        this.options.dialogsRegion.reset();
-                        var currentMovieController = cm.get('currentMovieController');
-                        currentMovieController && currentMovieController.setCurrentMovie(model, seancesCollection);
+                        setTimeout(function() {
+                            this.options.dialogsRegion.reset();
+                            var currentMovieController = cm.get('currentMovieController');
+                            currentMovieController && currentMovieController.setCurrentMovie(model, seancesCollection);
+                        }.bind(this), 1500);
                     }.bind(this));
                 }.bind(this));
                 this.options.sidebarWidget.on('opened', function() {
