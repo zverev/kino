@@ -272,6 +272,11 @@ define(['leaflet'], function(L) {
             L.DomEvent.disableClickPropagation(el);
             el.addEventListener('mousewheel', L.DomEvent.stopPropagation);
             el.addEventListener('mousemove', L.DomEvent.stopPropagation);
+        },
+        collapse: function() {
+            if (this._isOpened) {
+                this._mainAnimation.run();
+            }
         }
     });
 });
