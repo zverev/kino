@@ -15,6 +15,11 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
                     model: model
                 });
             }.bind(this));
+            this.popup.on('seance', function(seanceId) {
+                this.fire('seance', {
+                    seanceId: seanceId
+                })
+            }.bind(this))
 
             this.addMarkerBound = this.addMarker.bind(this);
             this.setCollection(this.options.collection);
@@ -32,10 +37,10 @@ define(['leaflet', 'layers/PopupMarker', 'views/CinemaPopupView'], function(L, P
         },
         addMarker: function(model) {
             var marker = new PopupMarker([model.get('location').latitude, model.get('location').longitude]);
-            //L.Marker.prototype.bindPopup.call(marker, this.popup.el);
-            marker.bindPopup(this.popup.el, {
-                showOnMouseOver: true
-            });
+            L.Marker.prototype.bindPopup.call(marker, this.popup.el);
+            // marker.bindPopup(this.popup.el, {
+            //     showOnMouseOver: true
+            // });
             marker.on('popupopen', function() {
                 this.popup.render(model, this.filterSeances(model.get('id'), this.seances));
             }.bind(this));

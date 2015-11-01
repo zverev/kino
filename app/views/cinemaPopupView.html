@@ -2,11 +2,9 @@
 <div class="cinemaPopup-adress cinemaPopup-row"><%= address %></div>
 <% if (seances) { %>
     <div class="cinemaPopup-seances">
-        <% seances.map(function (seance) { %>
-            <div class="seance">
-                <%= seance.get('startTime') %>
-            </div>
-        <% }) %>
+        <% for (var i = 0; i < seances.length; i++) { %>
+            <span class="cinemaPopup-seance" data-seance-id="<%= seances[i].id %>"><%= seances[i].timeStr %></span>
+        <% } %>
     </div>
 <% } %>
 <div class="cinemaPopup-footer cinemaPopup-row">

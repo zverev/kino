@@ -128,6 +128,10 @@ define([
             }));
         });
 
+        cinemasLayer.on('seance', function(le) {
+            console.log(le.seanceId);
+        });
+
         return cinemasLayer;
     });
 
