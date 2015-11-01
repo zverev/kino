@@ -48,10 +48,7 @@ define([
     cm.define('map', ['layoutManager'], function(cm) {
         var layoutManager = cm.get('layoutManager');
 
-        var map = L.map(layoutManager.getMapContainer()).setView({
-            lat: 55.7529120574368,
-            lng: 37.622079849243164
-        }, 12);
+        var map = L.map(layoutManager.getMapContainer());
 
         var tl = L.tileLayer('http://{s}.{base}.maps.cit.api.here.com/maptile/2.1/maptile/{mapID}/normal.day/{z}/{x}/{y}/256/png8?app_id={app_id}&app_code={app_code}', {
             attribution: 'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
@@ -64,6 +61,15 @@ define([
         })
 
         tl.addTo(map);
+
+        map.setDefaultView = function() {
+            this.setView({
+                lat: 55.7529120574368,
+                lng: 37.622079849243164
+            }, 12);
+        };
+
+        map.setDefaultView();
 
         return map;
     });
@@ -135,8 +141,9 @@ define([
         return sidebarWidget;
     });
 
-    cm.define('moviesTab', ['sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer'], function(cm) {
-        var cinemasLayer = cm.get('cinemasLayer')
+    cm.define('moviesTab', ['map', 'sidebarWidget', 'moviesCollection', 'cinemasCollection', 'cinemasLayer'], function(cm) {
+        var map = cm.get('map');
+        var cinemasLayer = cm.get('cinemasLayer');
         var sidebarWidget = cm.get('sidebarWidget');
         var moviesCollection = cm.get('moviesCollection');
         var cinemasCollection = cm.get('cinemasCollection');
@@ -158,6 +165,8 @@ define([
                 url: 'http://68a2bba2.ngrok.io/get/50_seances'
             });
             seancesCollection.on('ready', function() {
+                sidebarWidget.collapse();
+                map.setDefaultView();
                 cinemasLayer.setCollection(getCinemasBySeances(cinemasCollection, seancesCollection));
             });
         });
