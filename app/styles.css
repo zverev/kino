@@ -21,6 +21,9 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; font-family: 'Ope
 .cinemaItemView { font-size: .8em; border-bottom: 1px solid hsla(0, 0%, 0%, 0.15); padding: 5px; cursor: pointer; }
 .cinemaItemView:hover { background-color: hsla(0, 0%, 0%, .05); }
 
+.movieItemView { font-size: .8em; border-bottom: 1px solid hsla(0, 0%, 0%, 0.15); padding: 5px; cursor: pointer; }
+.movieItemView:hover { background-color: hsla(0, 0%, 0%, .05); }
+
 div[data-pane-id="cinemasTab"] { overflow-y: scroll; }
 .iconSidebarWidget-content { overflow: visible; }
 .cinemasListView-searchInput { 

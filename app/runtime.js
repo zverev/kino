@@ -11,6 +11,7 @@ define([
     'views/DialogView',
     'views/CinemaDetailsView',
     'views/CinemaItemView',
+    'views/MovieItemView'
 ], function(
     ComponentsManager,
     L,
@@ -23,7 +24,8 @@ define([
     SearchCollectionView,
     DialogView,
     CinemaDetailsView,
-    CinemaItemView
+    CinemaItemView,
+    MovieItemView
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -123,16 +125,38 @@ define([
         return sidebarWidget;
     });
 
-    cm.define('moviesTab', ['sidebarWidget'], function(cm) {
+    cm.define('moviesTab', ['sidebarWidget', 'moviesCollection', 'cinemasCollection'], function(cm) {
+        var cinemasLayer = cm.get('cinemasLayer')
         var sidebarWidget = cm.get('sidebarWidget');
-        var container = sidebarWidget.addTab('moviesTab', 'icon-video');
-        return null;
+        var moviesCollection = cm.get('moviesCollection');
+        var cinemasCollection = cm.get('cinemasCollection');
+
+        var reg = new Marionette.Region({
+            el: sidebarWidget.addTab('moviesTab', 'icon-video')
+        })
+
+        var cinemasListView = new SearchCollectionView({
+            itemView: MovieItemView,
+            collection: moviesCollection,
+            searchViewOptions: {
+                placeholder: 'Поиск по фильмам'
+            }
+
+        });
+        cinemasListView.on('childview:clack', function(child, model) {
+            console.log(model);
+        });
+
+        reg.show(cinemasListView);
+
+        return cinemasListView;
     });
 
     cm.define('cinemasTab', ['sidebarWidget', 'cinemasCollection', 'cinemasLayer'], function(cm) {
         var cinemasLayer = cm.get('cinemasLayer')
         var sidebarWidget = cm.get('sidebarWidget');
         var cinemasCollection = cm.get('cinemasCollection');
+
         var reg = new Marionette.Region({
             el: sidebarWidget.addTab('cinemasTab', 'icon-videocam')
         })
@@ -140,13 +164,16 @@ define([
             itemView: CinemaItemView,
             collection: cinemasCollection,
             searchViewOptions: {
-                placeholder: 'Поиск по кинотеатрам'
+                placeholder: 'Поиск по фильмам'
             }
         });
+
         cinemasListView.on('childview:clack', function(child, model) {
             cinemasLayer.navigateCinema(model);
         });
+
         reg.show(cinemasListView);
+
         return cinemasListView;
     });
 
