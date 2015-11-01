@@ -13,7 +13,9 @@ define([
     'views/CinemaItemView',
     'views/MovieItemView',
     'views/SelectedMovieWidget',
-    'views/PreloaderView'
+    'views/PreloaderView',
+    'views/TicketsView',
+    'utils'
 ], function(
     ComponentsManager,
     L,
@@ -29,7 +31,9 @@ define([
     CinemaItemView,
     MovieItemView,
     SelectedMovieWidget,
-    PreloaderView
+    PreloaderView,
+    TicketsView,
+    Utils
 ) {
     var cm = window.cm = new ComponentsManager();
 
@@ -128,10 +132,6 @@ define([
             }));
         });
 
-        cinemasLayer.on('seance', function(le) {
-            console.log(le.seanceId);
-        });
-
         return cinemasLayer;
     });
 
@@ -179,7 +179,15 @@ define([
         return cinemasListView;
     });
 
-    cm.define('currentMovieController', ['selectedMovieWidget', 'sidebarWidget', 'cinemasLayer', 'cinemasCollection', 'dialogsRegion', 'moviesTab'], function(cm) {
+    cm.define('currentMovieController', [
+        'selectedMovieWidget',
+        'sidebarWidget',
+        'cinemasLayer',
+        'cinemasCollection',
+        'moviesCollection',
+        'dialogsRegion',
+        'moviesTab'
+    ], function(cm) {
         var CurrentMovieController = L.Class.extend({
             initialize: function(options) {
                 L.setOptions(this, options);
@@ -193,6 +201,9 @@ define([
                         url: 'mock/seances.json'
                     });
 
+
+                    this.seancesCollection = seancesCollection;
+
                     seancesCollection.on('ready', function() {
                         setTimeout(function() {
                             this.options.dialogsRegion.reset();
@@ -200,6 +211,26 @@ define([
                             currentMovieController && currentMovieController.setCurrentMovie(model, seancesCollection);
                         }.bind(this), 1500);
                     }.bind(this));
+                }.bind(this));
+                this.options.cinemasLayer.on('seance', function(le) {
+                    var seance = this.seancesCollection.findWhere({
+                        id: le.seanceId / 1
+                    });
+                    var movie = this.options.moviesCollection.findWhere({
+                        id: seance.get('movieId')
+                    });
+                    var cinema = this.options.cinemasCollection.findWhere({
+                        id: seance.get('cinemaId')
+                    });
+                    this.options.dialogsRegion.show(new DialogView({
+                        contentView: new TicketsView({
+                            model: new Backbone.Model({
+                                movieTitle: movie ? movie.get('title') : 'фильм',
+                                timeStr: Utils.formatDate(new Date(seance.get('startTime')), 'hh:mm'),
+                                cinema: cinema ? cinema.get('title') : ''
+                            })
+                        })
+                    }));
                 }.bind(this));
                 this.options.sidebarWidget.on('opened', function() {
                     this.reset();
@@ -226,7 +257,8 @@ define([
             selectedMovieWidget: cm.get('selectedMovieWidget'),
             map: cm.get('map'),
             dialogsRegion: cm.get('dialogsRegion'),
-            cinemasListView: cm.get('moviesTab')
+            cinemasListView: cm.get('moviesTab'),
+            moviesCollection: cm.get('moviesCollection')
         });
     });
 
